@@ -6,12 +6,12 @@ using System.Security;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BccMe")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("BccMe Outlook 2010 Add-In")]
+[assembly: AssemblyDescription("automatically inserts you on bcc")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("BccMe")]
-[assembly: AssemblyCopyright("Copyright ©  2012")]
+[assembly: AssemblyCopyright("Copyright © 2012 cyplo@cyplo.net")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

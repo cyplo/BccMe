@@ -26,8 +26,9 @@ namespace BccMe
             if (bcc.Contains(address)) { return false; }
             if (bcc.Contains(name)) { return false; }
 
-            bcc += "  " + address;
+            bcc += "  " + address +";";
             email.BCC = bcc;
+            email.Recipients.ResolveAll();
             return true;
         }
 
