@@ -10,8 +10,19 @@ namespace BccMe
 {
     public partial class ThisAddIn
     {
+
+        private void AddMeOnBcc(Microsoft.Office.Interop.Outlook.Inspector Inspector)
+        {
+            var email = Inspector.CurrentItem as Outlook.MailItem;
+            if (email == null) { return; }
+            if (email.EntryID != null) { return; }//we're interested only in freshly created messages
+            
+            email.BCC += " " + Application.Session.CurrentUser.Address;
+        }
+
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
+            Application.Inspectors.NewInspector += new Outlook.InspectorsEvents_NewInspectorEventHandler(AddMeOnBcc);
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
