@@ -10,19 +10,47 @@ namespace BccMe
 {
     public partial class ThisAddIn
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns> true if any changes done </returns>
+        private bool AddBccIfNeeded(Outlook.MailItem email)
+        {
+            var address = Application.Session.CurrentUser.Address;
+            var name = Application.Session.CurrentUser.Name;
 
-        private void AddMeOnBcc(Microsoft.Office.Interop.Outlook.Inspector Inspector)
+            string bcc = email.BCC;
+            if (bcc == null) { bcc = ""; }
+
+            if (bcc.Contains(address)) { return false; }
+            if (bcc.Contains(name)) { return false; }
+
+            bcc += "  " + address;
+            email.BCC = bcc;
+            return true;
+        }
+
+        private void OnNewInspector(Microsoft.Office.Interop.Outlook.Inspector Inspector)
         {
             var email = Inspector.CurrentItem as Outlook.MailItem;
             if (email == null) { return; }
             if (email.EntryID != null) { return; }//we're interested only in freshly created messages
-            
-            email.BCC += " " + Application.Session.CurrentUser.Address;
+
+            AddBccIfNeeded(email);
+        }
+
+        private void OnSend(object item, ref bool cancel)
+        {
+            var email = item as Outlook.MailItem;
+            if (email == null) { return; }
+            cancel = AddBccIfNeeded(email);
         }
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            Application.Inspectors.NewInspector += new Outlook.InspectorsEvents_NewInspectorEventHandler(AddMeOnBcc);
+            Application.Inspectors.NewInspector += new Outlook.InspectorsEvents_NewInspectorEventHandler(OnNewInspector);
+            Application.ItemSend += new Outlook.ApplicationEvents_11_ItemSendEventHandler(OnSend);
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
